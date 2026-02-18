@@ -47,6 +47,25 @@ app.get('/', (req, res) => {
     });
 });
 
+// Manejo de errores global
+app.use((err, req, res, next) => {
+    console.error('❌ Error no manejado:', err);
+    res.status(500).json({
+        success: false,
+        message: 'Error en el servidor',
+        error: err.message
+    });
+});
+
+// Ruta 404
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        message: 'Ruta no encontrada',
+        path: req.path
+    });
+});
+
 // Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
