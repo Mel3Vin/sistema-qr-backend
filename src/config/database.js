@@ -1,8 +1,10 @@
 const mysql = require('mysql2/promise');
-require('dotenv').config();
 
-// LOGS DE DEBUG
-console.log(' === CONFIGURACIÓN DE BASE DE DATOS ===');
+// NO usar dotenv en producción, Railway inyecta las variables
+// require('dotenv').config();
+
+//  LOGS DE DEBUG
+console.log('=== CONFIGURACIÓN DE BASE DE DATOS ===');
 console.log('DB_HOST:', process.env.DB_HOST || 'NOT SET');
 console.log('DB_PORT:', process.env.DB_PORT || 'NOT SET');
 console.log('DB_USER:', process.env.DB_USER || 'NOT SET');
@@ -11,11 +13,11 @@ console.log('DB_PASSWORD:', process.env.DB_PASSWORD ? '***SET***' : 'NOT SET');
 console.log('========================================');
 
 const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'mysql.railway.internal',
-    port: process.env.DB_PORT || 3306,
-    user: process.env.DB_USER || 'root',
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT || '3306'),
+    user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME || 'railway',
+    database: process.env.DB_NAME,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -25,11 +27,12 @@ const pool = mysql.createPool({
 pool.getConnection()
     .then(connection => {
         console.log('✅ Conexión a MySQL exitosa');
+        console.log('✅ Conectado a:', process.env.DB_HOST);
         connection.release();
     })
     .catch(err => {
         console.error('❌ Error conectando a MySQL:', err.message);
-        console.error('❌ Error completo:', err);
+        console.error('❌ Intentando conectar a:', process.env.DB_HOST);
     });
 
 module.exports = pool;
