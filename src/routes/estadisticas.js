@@ -1,5 +1,4 @@
 const express = require('express');
-module.exports = router;
 const router = express.Router();
 const db = require('../config/database');
 const { verificarToken, esAdmin } = require('../middlewares/authMiddleware');
